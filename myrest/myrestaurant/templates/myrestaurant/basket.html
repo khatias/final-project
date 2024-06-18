@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Shopping Basket</title>
+</head>
+<body>
+    <header>
+        <a class="logo" href="{% url 'category-list' %}">Rice and Slice</a>
+        <div>
+            <a class="home" href="{% url 'category-list' %}">home</a>
+            <span>
+                <a class="cart-a" href="">cart</a>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><style>.cls-1{fill:#919191}.cls-5{fill:#374f68}.cls-6{fill:#425b72}</style></defs><g id="Trolley"><path class="cls-1" d="M41 38H12a4 4 0 0 1-4-4c0-3.85 5-5.07 5-3a1 1 0 0 1-1 1 2 2 0 0 0 0 4h29a1 1 0 0 1 0 2z"/><path d="M41.86 37.5c-.4-.71 1.79-.5-29.86-.5a2 2 0 0 1-1.93-2.5A2 2 0 0 0 12 36h29a1 1 0 0 1 .86 1.5z" style="fill:#7c7d7d"/><path class="cls-1" d="M8 11.14 7.13 5H2a1 1 0 0 1 0-2h6a1 1 0 0 1 1 .86l1 7a1 1 0 0 1-2 .28z"/><path d="M47 13c-4.08 19.36-3.4 16.15-4 19H11L8 11z" style="fill:#dad7e5"/><path d="m47 13-3.58 17H22.2a6 6 0 0 1-5.94-5.15l-1.93-13.53z" style="fill:#edebf2"/><path class="cls-5" d="M19 43a3 3 0 1 1-5.56-1.56A3 3 0 0 1 19 43z"/><path class="cls-6" d="M17.56 45.56a3 3 0 0 1-4.12-4.12 3 3 0 0 1 4.12 4.12z"/><circle class="cls-6" cx="34" cy="43" r="3"/><path class="cls-5" d="M34 40a3 3 0 0 0-2.55 1.45 3 3 0 0 1 4.1 4.1A3 3 0 0 0 34 40z"/></g></svg>
+            </span>   
+        </div>
+    </header>  
+    <h1 style="padding-bottom: 40px; padding-top: 20px;">Shopping Basket</h1>
+    
+    <ul class="ordered-box">
+        <form method="POST" action="{% url 'update-basket' %}">
+            {% csrf_token %}
+            {% for item in items %}
+                <li class="ordered-item">
+                   <p><span>Product:</span> {{ item.product.name }}</p> 
+                    <p><span>Price: </span>${{ item.product.price }}</p>
+                    <span>
+                     <p>Quantity: </p>
+                    <input type="number" name="quantity_{{ item.id }}" value="{{ item.quantity }}" min="1" max="10" style="background-color: white;">
+                </span>
+                    <button class="btn" type="submit" name="update_quantity" value="{{ item.id }}">Update Quantity</button>
+                    <button class="btn" type="submit" name="delete_item" value="{{ item.id }}">Delete</button><br>
+                </li>
+                <hr>
+            {% empty %}
+                <li>Your basket is empty.</li>
+            {% endfor %}
+        </form>
+        
+    </ul>
+    <div class="total-box">
+    <p class="total">Total Items: {{ total_items }}</p>
+    <p class="total">Total Price: ${{ total_price }}</p>
+</div>
+
+</body>
+</html>
